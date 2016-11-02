@@ -44,4 +44,12 @@ class SoapKernel extends CommonSoapKernel
 
         $this->attachments = $response->getAttachments();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
 }
