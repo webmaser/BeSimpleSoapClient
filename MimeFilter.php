@@ -115,9 +115,14 @@ class MimeFilter implements SoapRequestFilterCommon, SoapResponseFilterCommon
             $headers = array(
                 'Content-Type' => trim($responseContentType),
             );
-            $multipart = MimeParser::parseMimeMessage($response->getContent(), $headers);
+
+            // fix of Tibco Content-id in response
+            $content = \preg_replace('/content-id/i', 'Content-ID', $response->getContent());
+
+            $multipart = MimeParser::parseMimeMessage($content, $headers);
             // get soap payload and update SoapResponse object
             $soapPart = $multipart->getPart();
+
             // convert href -> myhref for external references as PHP throws exception in this case
             // http://svn.php.net/viewvc/php/php-src/branches/PHP_5_4/ext/soap/php_encoding.c?view=markup#l3436
             $content = preg_replace('/href=(?!#)/', 'myhref=', $soapPart->getContent());
